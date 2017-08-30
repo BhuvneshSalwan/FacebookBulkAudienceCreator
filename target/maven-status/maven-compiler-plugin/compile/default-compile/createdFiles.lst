@@ -1,0 +1,5 @@
+com\google\bigquery\main\TableResults.class
+com\facebook\audience\creator\WebsiteAudience.class
+com\google\bigquery\main\Authenticate.class
+com\facebook\audience\main\App.class
+com\facebook\audience\creator\PageAudience.class
