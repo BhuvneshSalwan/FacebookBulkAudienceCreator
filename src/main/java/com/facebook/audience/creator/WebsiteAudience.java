@@ -3,6 +3,7 @@ package com.facebook.audience.creator;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -13,6 +14,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import com.facebook.audience.main.App;
+import com.google.api.services.bigquery.model.TableDataInsertAllRequest.Rows;
 import com.google.api.services.bigquery.model.TableRow;
 
 public class WebsiteAudience {
@@ -33,13 +36,13 @@ public class WebsiteAudience {
 			String keywords;
 			String lower_bound;
 			
-			try{ account_id = (String) row.getF().get(14).getV(); } catch(Exception e){ account_id = "NULL";}
-			try{ audience_name = (String) row.getF().get(11).getV(); } catch(Exception e){ audience_name = "NULL"; }
-			try{ pixel_id = (String) row.getF().get(15).getV(); } catch(Exception e){ pixel_id = "NULL"; }
-			try{ event = (String) row.getF().get(19).getV(); } catch(Exception e){ event = "NULL"; }
-			try{ retention_days = (String) row.getF().get(13).getV(); } catch(Exception e){ System.out.println(e); retention_days = "NULL"; }
-			try{ keywords = (String) row.getF().get(18).getV(); } catch(Exception e){ keywords = "NULL"; }
-			try{ lower_bound = (String) row.getF().get(20).getV(); } catch(Exception e){ System.out.println(e); lower_bound = "NULL"; }
+			try{ account_id = (String) row.getF().get(3).getV(); } catch(Exception e){ account_id = "NULL";}
+			try{ audience_name = (String) row.getF().get(0).getV(); } catch(Exception e){ audience_name = "NULL"; }
+			try{ pixel_id = (String) row.getF().get(4).getV(); } catch(Exception e){ pixel_id = "NULL"; }
+			try{ event = (String) row.getF().get(8).getV(); } catch(Exception e){ event = "NULL"; }
+			try{ retention_days = (String) row.getF().get(2).getV(); } catch(Exception e){ System.out.println(e); retention_days = "NULL"; }
+			try{ keywords = (String) row.getF().get(7).getV(); } catch(Exception e){ keywords = "NULL"; }
+			try{ lower_bound = (String) row.getF().get(9).getV(); } catch(Exception e){ System.out.println(e); lower_bound = "NULL"; }
 			
 			System.out.println(account_id);
 			System.out.println(audience_name);
@@ -99,7 +102,7 @@ public class WebsiteAudience {
 			
 			else if(!lower_bound.equals("NULL") && !lower_bound.equals("")){
 				
-				urlparameters.add(new BasicNameValuePair("rule", "{\"and\":[{\"url\":{\"i_contains\":\"\"}},{\"or\":[{\"url\":{\"i_contains\":\""+ (String) row.getF().get(17).getV() +"\"}}]}]}"));
+				urlparameters.add(new BasicNameValuePair("rule", "{\"and\":[{\"url\":{\"i_contains\":\"\"}},{\"or\":[{\"url\":{\"i_contains\":\""+ (String) row.getF().get(6).getV() +"\"}}]}]}"));
 				
 				urlparameters.add(new BasicNameValuePair("rule_aggregation", "{\"type\":\"time_spent\",\"method\":\"percentile\",\"lower_bound\":"+ lower_bound +",\"upper_bound\":100}"));		
 						
@@ -107,7 +110,7 @@ public class WebsiteAudience {
 			
 			else{
 				
-				urlparameters.add(new BasicNameValuePair("rule", "{\"and\":[{\"url\":{\"i_contains\":\"" + (String) row.getF().get(17).getV() + "\"}}]}"));
+				urlparameters.add(new BasicNameValuePair("rule", "{\"and\":[{\"url\":{\"i_contains\":\"" + (String) row.getF().get(6).getV() + "\"}}]}"));
 			
 			}
 			
@@ -129,6 +132,20 @@ public class WebsiteAudience {
 			}
 			
 			System.out.println("Response Content : " + buffer.toString());
+			
+			Rows logsRow = new Rows();
+			
+			HashMap<String, Object> logsMap = new HashMap<String, Object>();
+			
+			logsMap.put("account_id", account_id);
+			logsMap.put("operation", "WEBSITE_AUDIENCE_CREATE");
+			logsMap.put("table_name", "AUDIENCE_CREATE");
+			logsMap.put("audience_name", audience_name);
+			logsMap.put("status_code", response.getStatusLine().getStatusCode());
+			logsMap.put("response_message", buffer.toString());
+			
+			logsRow.setJson(logsMap);
+			App.logChunk.add(logsRow);
 			
 			if(response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300){
 				

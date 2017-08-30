@@ -3,6 +3,7 @@ package com.facebook.audience.creator;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -13,7 +14,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import com.facebook.audience.main.App;
 import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TableDataInsertAllRequest.Rows;
 
 public class PageAudience {
 
@@ -31,18 +34,18 @@ public class PageAudience {
 			String event;
 			String retention_days;
 			
-			try{ account_id = (String) row.getF().get(14).getV(); } catch(Exception e){ account_id = "NULL";}
-			try{ audience_name = (String) row.getF().get(11).getV(); } catch(Exception e){ audience_name = "NULL"; }
-			try{ page_id = (String) row.getF().get(16).getV(); } catch(Exception e){ page_id = "NULL"; }
-			try{ event = (String) row.getF().get(19).getV(); } catch(Exception e){ event = "NULL"; }
-			try{ retention_days = (String) row.getF().get(13).getV(); } catch(Exception e){ retention_days = "NULL"; }
+			try{ account_id = (String) row.getF().get(3).getV(); } catch(Exception e){ account_id = "NULL";}
+			try{ audience_name = (String) row.getF().get(0).getV(); } catch(Exception e){ audience_name = "NULL"; }
+			try{ page_id = (String) row.getF().get(5).getV(); } catch(Exception e){ page_id = "NULL"; }
+			try{ event = (String) row.getF().get(8).getV(); } catch(Exception e){ event = "NULL"; }
+			try{ retention_days = (String) row.getF().get(2).getV(); } catch(Exception e){ retention_days = "NULL"; }
 			
 			if(account_id.equals("NULL")){
 				System.out.println("Response Message : Couldn't find the Account ID for the Audience.");
 				return false;
 			}
 		
-			String custom_url = URL + "/" + VERSION + "/act_" + (String) row.getF().get(14).getV() + "/customaudiences";
+			String custom_url = URL + "/" + VERSION + "/act_" + account_id + "/customaudiences";
 			
 			HttpClient reqClient = new DefaultHttpClient();
 			HttpPost reqpost = new HttpPost(custom_url);
@@ -110,6 +113,20 @@ public class PageAudience {
 			}
 			
 			System.out.println("Response Content : " + buffer.toString());
+			
+			Rows logsRow = new Rows();
+			
+			HashMap<String, Object> logsMap = new HashMap<String, Object>();
+			
+			logsMap.put("account_id", account_id);
+			logsMap.put("operation", "PAGE_AUDIENCE_CREATE");
+			logsMap.put("table_name", "AUDIENCE_CREATE");
+			logsMap.put("audience_name", audience_name);
+			logsMap.put("status_code", response.getStatusLine().getStatusCode());
+			logsMap.put("response_message", buffer.toString());
+			
+			logsRow.setJson(logsMap);
+			App.logChunk.add(logsRow);
 			
 			if(response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300){
 				
