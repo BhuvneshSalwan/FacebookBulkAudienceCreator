@@ -2,6 +2,7 @@ package com.facebook.audience.creator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -138,11 +139,12 @@ public class WebsiteAudience {
 			HashMap<String, Object> logsMap = new HashMap<String, Object>();
 			
 			logsMap.put("account_id", account_id);
-			logsMap.put("operation", "WEBSITE_AUDIENCE_CREATE");
+			logsMap.put("operation", "CREATE");
 			logsMap.put("table_name", "AUDIENCE_CREATE");
 			logsMap.put("audience_name", audience_name);
 			logsMap.put("status_code", response.getStatusLine().getStatusCode());
 			logsMap.put("response_message", buffer.toString());
+			logsMap.put("created_at", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
 			
 			logsRow.setJson(logsMap);
 			App.logChunk.add(logsRow);
