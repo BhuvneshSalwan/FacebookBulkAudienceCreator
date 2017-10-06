@@ -1,6 +1,14 @@
 The Code is used to Create Audiences on Facebook.
 The Type of the Audience Created is Website and Page Engagement.
 
+The Version of the Code is : v4.1
+
+The Difference from Code Version v4.0
+
+1. Changed the location of adding data to BQ from bottom to below the for Loop.
+
+
+
 The Version of the Code is : v4.0
 
 The Difference from Code Version v3.0

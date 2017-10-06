@@ -25,7 +25,8 @@ public class Authenticate{
 	public static FileDataStoreFactory dataStoreFactory;
 	static GoogleClientSecrets clientSecrets = loadClientSecrets();
 	private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"), ".store/bq_fb_bulk_audience_creator");
-	private static final String CLIENTSECRETS_LOCATION = "C:\\Program Files\\Java\\projects\\FacebookBulkAudienceCreator\\target\\client_secret_154911048506-ign21bljsc6jmrdvrd84tqt3a6omk5be.apps.googleusercontent.com.json";
+	//private static final String CLIENTSECRETS_LOCATION = "C:\\Program Files\\Java\\projects\\FacebookBulkAudienceCreator\\target\\client_secret_154911048506-ign21bljsc6jmrdvrd84tqt3a6omk5be.apps.googleusercontent.com.json";
+	private static final String CLIENTSECRETS_LOCATION = "/home/bhuvnesh/google_credentials/client_secret_154911048506-ign21bljsc6jmrdvrd84tqt3a6omk5be.apps.googleusercontent.com.json";
 	
 	public static Bigquery getAuthenticated(){
 		

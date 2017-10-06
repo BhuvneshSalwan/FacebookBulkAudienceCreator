@@ -17,7 +17,7 @@ public class App{
 	
     public static void main( String[] args )
     {
-        
+     
     	Bigquery bigquery;
     	
     	if((bigquery = Authenticate.getAuthenticated()) != null){
@@ -72,6 +72,16 @@ public class App{
     						
     					}
     					
+    					if(null !=  logChunk && logChunk.size() > 0){
+    			    		
+    			    		if(TableResults.insertDataRows(bigquery, logChunk)){
+    			    			System.out.println("Response Message : Logs Added Successfully.");
+    			    		}else{
+    			    			System.out.println("Response Message : Error while saving Logs.");
+    			    		}
+    			    		
+    			    	}
+    					
     				}
     				else{
     					System.out.println("Response Message : Some Error while retrieving data from Table.");
@@ -94,16 +104,6 @@ public class App{
     		
     		System.out.println("Response Message : Didn't got the object of Big Query from get Authenticated Method.");
     		System.exit(0);
-    		
-    	}
-    	
-    	if(logChunk.size() > 0){
-    		
-    		if(TableResults.insertDataRows(bigquery, logChunk)){
-    			System.out.println("Response Message : Logs Added Successfully.");
-    		}else{
-    			System.out.println("Response Message : Error while saving Logs.");
-    		}
     		
     	}
     	
