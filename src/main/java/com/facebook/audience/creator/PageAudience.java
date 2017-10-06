@@ -34,12 +34,16 @@ public class PageAudience {
 			String page_id;
 			String event;
 			String retention_days;
+			String hostname;
+			String parse_client_id;
 			
 			try{ account_id = (String) row.getF().get(3).getV(); } catch(Exception e){ account_id = "NULL";}
 			try{ audience_name = (String) row.getF().get(0).getV(); } catch(Exception e){ audience_name = "NULL"; }
 			try{ page_id = (String) row.getF().get(5).getV(); } catch(Exception e){ page_id = "NULL"; }
 			try{ event = (String) row.getF().get(8).getV(); } catch(Exception e){ event = "NULL"; }
 			try{ retention_days = (String) row.getF().get(2).getV(); } catch(Exception e){ retention_days = "NULL"; }
+			try{ hostname = (String) row.getF().get(6).getV(); } catch(Exception e){ System.out.println(e); hostname = "NULL"; }
+			try{ parse_client_id = (String) row.getF().get(10).getV(); } catch(Exception e){ System.out.println(e); parse_client_id = "NULL"; }
 			
 			if(account_id.equals("NULL")){
 				System.out.println("Response Message : Couldn't find the Account ID for the Audience.");
@@ -119,6 +123,8 @@ public class PageAudience {
 			
 			HashMap<String, Object> logsMap = new HashMap<String, Object>();
 			
+			logsMap.put("hostname", hostname);
+			logsMap.put("parse_client_id", parse_client_id);
 			logsMap.put("account_id", account_id);
 			logsMap.put("operation", "CREATE");
 			logsMap.put("table_name", "AUDIENCE_CREATE");

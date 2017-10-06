@@ -36,6 +36,8 @@ public class WebsiteAudience {
 			String retention_days;
 			String keywords;
 			String lower_bound;
+			String hostname;
+			String parse_client_id;
 			
 			try{ account_id = (String) row.getF().get(3).getV(); } catch(Exception e){ account_id = "NULL";}
 			try{ audience_name = (String) row.getF().get(0).getV(); } catch(Exception e){ audience_name = "NULL"; }
@@ -44,6 +46,8 @@ public class WebsiteAudience {
 			try{ retention_days = (String) row.getF().get(2).getV(); } catch(Exception e){ System.out.println(e); retention_days = "NULL"; }
 			try{ keywords = (String) row.getF().get(7).getV(); } catch(Exception e){ keywords = "NULL"; }
 			try{ lower_bound = (String) row.getF().get(9).getV(); } catch(Exception e){ System.out.println(e); lower_bound = "NULL"; }
+			try{ hostname = (String) row.getF().get(6).getV(); } catch(Exception e){ System.out.println(e); hostname = "NULL"; }
+			try{ parse_client_id = (String) row.getF().get(10).getV(); } catch(Exception e){ System.out.println(e); parse_client_id = "NULL"; }
 			
 			System.out.println(account_id);
 			System.out.println(audience_name);
@@ -52,6 +56,8 @@ public class WebsiteAudience {
 			System.out.println(retention_days);
 			System.out.println(keywords);
 			System.out.println(lower_bound);
+			System.out.println(hostname);
+			System.out.println(parse_client_id);
 			
 			if(account_id.equals("NULL")){
 				System.out.println("Response Message : Couldn't find the Account ID for the Audience.");
@@ -138,6 +144,8 @@ public class WebsiteAudience {
 			
 			HashMap<String, Object> logsMap = new HashMap<String, Object>();
 			
+			logsMap.put("hostname", hostname);
+			logsMap.put("parse_client_id", parse_client_id);
 			logsMap.put("account_id", account_id);
 			logsMap.put("operation", "CREATE");
 			logsMap.put("table_name", "AUDIENCE_CREATE");
